@@ -26,7 +26,8 @@ app.get('/test', (req, res) => {
 })
 
 app.get('/test2', async (req, res) => {
-    const exist = await Auth.findOne().count();
+    console.log("hellp I am text2");
+    const exist = await Auth.find()
     res.send(exist)
 })
 
