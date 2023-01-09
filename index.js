@@ -21,5 +21,8 @@ app.use('/', AuthAPIs);
 app.use('/', AddressBookAPIs)
 app.use('/', TransportAPIs)
 
+app.get('/test', (req, res) => {
+    res.send("working")
+})
 
 app.listen(PORT, () => { console.log(`server is running on port ${PORT}`) })
