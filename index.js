@@ -9,6 +9,7 @@ const app = express();
 
 app.use(express.json())
 app.use(cors());
+require('dotenv').config();
 
 mongoose.set('strictQuery', true); // just to avoid a warning
 

@@ -15,7 +15,7 @@ router.post('/add-address', async (req, res) => {
         additionalInfo,
     } = req.body
     const user_ref = req.headers.id
-
+    console.log(req.body);
     if (!callsign || !address || !postalcode || !city || !state || !province || !phone) {
         res.status(403).json({ error: "Please complete the form first*" })
     } else {
