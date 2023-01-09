@@ -25,10 +25,5 @@ app.get('/test', (req, res) => {
     res.send("working")
 })
 
-app.get('/test2', async (req, res) => {
-    console.log("hellp I am text2");
-    const exist = await Auth.find()
-    res.send("jkjkdls jfksdj")
-})
 
 app.listen(PORT, () => { console.log(`server is running on port ${PORT}`) })
