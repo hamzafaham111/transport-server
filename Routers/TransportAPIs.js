@@ -126,10 +126,11 @@ router.get('/display-transports', async (req, res) => {
 })
 router.get('/delete-transports', async (req, res) => {
     const ID = req.headers.id
+    const userID = req.headers.userid
     const data = await Transport.deleteOne({ _id: ID });
     if (data.acknowledged == true) {
 
-        const data2 = await Transport.find();
+        const data2 = await Transport.find({ user_ref: userID });
         res.status(200).json({ data: data2 })
     } else {
         res.status(403).json({ error: "something went wrong" })
