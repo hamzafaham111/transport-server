@@ -15,7 +15,7 @@ router.post('/add-address', async (req, res) => {
         additionalInfo,
     } = req.body
     const user_ref = req.headers.id
-    console.log(req.body);
+
     if (!callsign || !address || !postalcode || !city || !state || !province || !phone) {
         res.status(403).json({ error: "Please complete the form first*" })
     } else {
@@ -37,7 +37,7 @@ router.post('/add-address', async (req, res) => {
 })
 router.get('/display-addresses', async (req, res) => {
     const ID = req.headers.id
-    console.log(ID)
+
     const data = await AddressBook.find({ user_ref: ID });
     const distinctCallsigns = [...new Set(data.map((obj) => obj.callsign))];
     const callsignes = await AddressBook.distinct("callsign")
@@ -81,7 +81,7 @@ router.post('/update-address', async (req, res) => {
 
 router.get('/delete-address', async (req, res) => {
     const address_id = req.headers.id;
-    console.log(address_id)
+
     const data = await AddressBook.deleteOne({ _id: address_id })
     if (data.acknowledged == true) {
         const data = await AddressBook.find();

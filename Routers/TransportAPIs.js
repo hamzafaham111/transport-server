@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
 const Transport = require('../Models/Transport')
+const AddressBook = require('../Models/AddressBook')
 router.post('/transport', async (req, res) => {
     console.log(req.body);
     const {
@@ -30,8 +31,16 @@ router.post('/transport', async (req, res) => {
         externalAppariance,
         port,
         noPackeges,
-        annotations, } = req.body
-    const values = req.body.data
+        annotations, } = req.body.documentData
+    const { callsign,
+        address,
+        postalcode,
+        city,
+        state,
+        province,
+        phone,
+        email,
+        additionalInfo, } = req.body.recipientData;
     const user_ref = req.headers.id
     if (
         !docNo ||
@@ -42,11 +51,11 @@ router.post('/transport', async (req, res) => {
         !agentInCharge ||
         !status ||
         !recipientName ||
-        !recipientaddress ||
-        !goodDestinationAddress ||
-        !goodDestinationPostalCode ||
-        !goodsDestinationCity ||
-        !goodDestinationProvince ||
+        // !recipientaddress ||
+        // !goodDestinationAddress ||
+        // !goodDestinationPostalCode ||
+        // !goodsDestinationCity ||
+        // !goodDestinationProvince ||
         !goodDestinationNation ||
         !career1 ||
         !causal ||
@@ -70,10 +79,10 @@ router.post('/transport', async (req, res) => {
                 agentInCharge,
                 status,
                 recipientName,
-                recipientaddress,
-                recipientPostalCode,
-                recipientCity,
-                recipientProvince,
+                recipientaddress: address,
+                recipientPostalCode: postalcode,
+                recipientCity: city,
+                recipientProvince: province,
                 recipientNation,
                 goodDestinationAddress,
                 goodDestinationPostalCode,
@@ -101,6 +110,11 @@ router.post('/transport', async (req, res) => {
         //     res.status(403).json({ error: "password does not match" })
         // }
     }
+})
+router.get('/get-recipitents-data', async (req, res) => {
+    const id = req.headers.id;
+    const data = await AddressBook.find({ user_ref: id });
+    res.status(200).json({ data: data })
 })
 
 router.get('/display-transports', async (req, res) => {
