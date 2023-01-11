@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Transport = require('../Models/Transport')
 const AddressBook = require('../Models/AddressBook')
+const Products = require('../Models/ProductsSchema')
 router.post('/transport', async (req, res) => {
     console.log(req.body);
     const {
@@ -14,10 +15,6 @@ router.post('/transport', async (req, res) => {
         agentInCharge,
         status,
         recipientName,
-        recipientaddress,
-        recipientPostalCode,
-        recipientCity,
-        recipientProvince,
         recipientNation,
         goodDestinationAddress,
         goodDestinationPostalCode,
@@ -28,19 +25,21 @@ router.post('/transport', async (req, res) => {
         career2,
         career3,
         causal,
+        productDescription,
+        netPrice,
+        pricePerKg,
+        grossPrice,
+        textPrice,
         externalAppariance,
         port,
         noPackeges,
         annotations, } = req.body.documentData
-    const { callsign,
+    const {
         address,
         postalcode,
         city,
-        state,
         province,
-        phone,
-        email,
-        additionalInfo, } = req.body.recipientData;
+    } = req.body.recipientData;
     const user_ref = req.headers.id
     if (
         !docNo ||
@@ -51,11 +50,6 @@ router.post('/transport', async (req, res) => {
         !agentInCharge ||
         !status ||
         !recipientName ||
-        // !recipientaddress ||
-        // !goodDestinationAddress ||
-        // !goodDestinationPostalCode ||
-        // !goodsDestinationCity ||
-        // !goodDestinationProvince ||
         !goodDestinationNation ||
         !career1 ||
         !causal ||
@@ -65,9 +59,6 @@ router.post('/transport', async (req, res) => {
         console.log("should fill the complete form");
         res.status(403).json({ error: "Please Fill Your Form Completely" })
     } else {
-        // if (password == cpassword) {
-        //     const exist = await Auth.findOne({ email }).count();
-        //     if (exist == 0) {
         const interedData = new Transport(
             {
                 user_ref,
@@ -99,16 +90,18 @@ router.post('/transport', async (req, res) => {
                 annotations,
             }
         )
+        const interedData2 = new Products({
+            productDescription,
+            netPrice,
+            pricePerKg,
+            grossPrice,
+            textPrice,
+        })
         interedData.user_ref = user_ref
         const saved = await interedData.save();
+        const saved2 = await interedData2.save();
         res.status(200).json({ message: "data submitted successfully" })
-        // } else {
-        //     res.status(403).json({ error: "email alredy registered" })
-        // }
-        // } else {
-        //     console.log("Password does match");
-        //     res.status(403).json({ error: "password does not match" })
-        // }
+
     }
 })
 router.get('/get-recipitents-data', async (req, res) => {
@@ -142,5 +135,9 @@ router.get('/display-transport-view', async (req, res) => {
     const data = await Transport.findOne({ _id: ID });
     console.log(data)
     res.status(200).json({ data: data });
+})
+router.get('/get-products-data', async (req, res) => {
+    const data = await Products.find();
+    res.status(200).json({ data })
 })
 module.exports = router
