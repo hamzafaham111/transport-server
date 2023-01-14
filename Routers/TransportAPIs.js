@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const express = require('express');
 const router = express.Router();
 const Transport = require('../Models/Transport')
@@ -59,11 +60,15 @@ router.post('/transport', async (req, res) => {
         console.log("should fill the complete form");
         res.status(403).json({ error: "Please Fill Your Form Completely" })
     } else {
+        const date = docDate;
+        const parts = date.split("-");
+        const reversedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
+        console.log(reversedDate);
         const interedData = new Transport(
             {
                 user_ref,
                 docNo,
-                docDate,
+                docDate: reversedDate,
                 transportStartTime,
                 goodsTravilingByMeans,
                 sanderAddress,
@@ -110,6 +115,7 @@ router.get('/get-recipitents-data', async (req, res) => {
     res.status(200).json({ data: data })
 })
 
+
 router.get('/display-transports', async (req, res) => {
     const ID = req.headers.id
 
@@ -139,5 +145,19 @@ router.get('/display-transport-view', async (req, res) => {
 router.get('/get-products-data', async (req, res) => {
     const data = await Products.find();
     res.status(200).json({ data })
+})
+router.get('/document-data', async (req, res) => {
+    const ID = req.headers.documentid
+    console.log(ID)
+    const data = await Transport.findOne({ _id: ID });
+    console.log(data)
+    res.status(200).json({ data: data });
+})
+router.post('/update-document', async (req, res) => {
+    const { documentid } = req.headers
+    const data = req.body.documentData;
+    const updated = await Transport.updateOne({ _id: documentid }, { $set: data })
+    console.log(updated);
+    res.status(200).json({ data: "" })
 })
 module.exports = router
