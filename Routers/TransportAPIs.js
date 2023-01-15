@@ -153,6 +153,7 @@ router.get('/document-data', async (req, res) => {
     console.log(data)
     res.status(200).json({ data: data });
 })
+
 router.post('/update-document', async (req, res) => {
     const { documentid } = req.headers
     const data = req.body.documentData;
