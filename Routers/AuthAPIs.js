@@ -17,8 +17,8 @@ router.post('/register', async (req, res) => {
             } else {
                 res.status(403).json({ error: "email già registrata" })
             }
-
         } else {
+
             console.log("Password does match");
             res.status(403).json({ error: "La password non corrisponde" })
         }
@@ -34,7 +34,6 @@ router.post('/login', async (req, res) => {
         console.log("should fill the complete form");
         res.status(403).json({ error: "Si prega di compilare il modulo in modo completo" })
     }
-
     else {
         const exist = await Auth.findOne({
             $and: [
