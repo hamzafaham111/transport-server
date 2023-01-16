@@ -13,7 +13,6 @@ app.use(cors());
 require('dotenv').config();
 const Auth = require('./Models/AuthSchema')
 mongoose.set('strictQuery', true); // just to avoid a warning
-
 const PORT = 4000 || process.env.PORT;
 require('./Connection')
 
