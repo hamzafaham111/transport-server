@@ -78,6 +78,7 @@ router.post('/update-address', async (req, res) => {
         res.status(403).json({ error: "something went wrong" })
     }
 })
+
 router.get('/delete-address', async (req, res) => {
     const address_id = req.headers.id;
     const data = await AddressBook.deleteOne({ _id: address_id })

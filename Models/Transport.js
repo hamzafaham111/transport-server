@@ -32,6 +32,10 @@ const TransportSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    products: {
+        type: Array,
+        required: true,
+    },
     recipientName: {
         type: String,
         required: true,
@@ -42,19 +46,19 @@ const TransportSchema = mongoose.Schema({
     },
     recipientPostalCode: {
         type: String,
-    
+
     },
     recipientCity: {
         type: String,
-   
+
     },
     recipientProvince: {
         type: String,
- 
+
     },
     recipientNation: {
         type: String,
-       
+
     },
     goodDestinationAddress: {
         type: String,
