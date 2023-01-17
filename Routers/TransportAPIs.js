@@ -6,7 +6,6 @@ const Transport = require('../Models/Transport')
 const AddressBook = require('../Models/AddressBook')
 const Products = require('../Models/ProductsSchema')
 router.post('/add-document', async (req, res) => {
-    console.log(req.body);
     const {
         docNo,
         docDate,
@@ -29,13 +28,14 @@ router.post('/add-document', async (req, res) => {
         externalAppariance,
         port,
         noPackeges,
-        annotations, } = req.body.documentData
+        annotations, } = req.body.documentData;
     const {
         address,
         postalcode,
         city,
         province,
     } = req.body.recipientData;
+
     const { finalProducts, lastProducts } = req.body;
     console.log("this is the last Product", lastProducts);
     const products = [
