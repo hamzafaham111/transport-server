@@ -58,6 +58,7 @@ router.post('/add-document', async (req, res) => {
             !status ||
             !recipientName ||
             !goodDestinationNation ||
+            !goodDestinationAddress ||
             !career1 ||
             !causal ||
             !externalAppariance ||
