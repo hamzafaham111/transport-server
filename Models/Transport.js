@@ -78,7 +78,6 @@ const TransportSchema = mongoose.Schema({
     },
     goodDestinationNation: {
         type: String,
-        required: true,
     },
     career1: {
         type: String,

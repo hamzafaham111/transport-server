@@ -6,6 +6,7 @@ const Transport = require('../Models/Transport')
 const AddressBook = require('../Models/AddressBook')
 const Products = require('../Models/ProductsSchema')
 router.post('/add-document', async (req, res) => {
+    console.log(req.body);
     const {
         docNo,
         docDate,
