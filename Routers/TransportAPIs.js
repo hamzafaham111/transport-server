@@ -171,11 +171,12 @@ router.get('/document-data', async (req, res) => {
     res.status(200).json({ data: data });
 })
 
-
 router.post('/update-document', async (req, res) => {
+    console.log(req.body);
+
     const { documentid } = req.headers
     const data = req.body.documentData;
     const updated = await Transport.updateOne({ _id: documentid }, { $set: data })
-    res.status(200).json({ data: "" })
+    res.status(200).json({ message: "documento aggiornato" })
 })
 module.exports = router
