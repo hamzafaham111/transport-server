@@ -8,7 +8,7 @@ const Products = require('../Models/ProductsSchema')
 router.post('/add-document', async (req, res) => {
     console.log(req.body);
     const {
-        docNo,
+
         docDate,
         transportStartTime,
         goodsTravilingByMeans,
@@ -38,7 +38,6 @@ router.post('/add-document', async (req, res) => {
     } = req.body.recipientData;
 
     const { finalProducts, lastProducts } = req.body;
-    console.log("this is the last Product", lastProducts);
     const products = [
         ...finalProducts,
         lastProducts
@@ -47,10 +46,8 @@ router.post('/add-document', async (req, res) => {
         return !val.productDescription == "";
     })
     if (theseAreTheLastProducts.length >= 1) {
-        console.log("this is this is this", theseAreTheLastProducts.length);
         const user_ref = req.headers.id
         if (
-            !docNo ||
             !docDate ||
             !transportStartTime ||
             !goodsTravilingByMeans ||
@@ -72,65 +69,118 @@ router.post('/add-document', async (req, res) => {
             const parts = date.split("-");
             const reversedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
             console.log(reversedDate);
-            const interedData = new Transport(
-                {
-                    user_ref,
-                    docNo,
-                    docDate: reversedDate,
-                    transportStartTime,
-                    goodsTravilingByMeans,
-                    sanderAddress,
-                    agentInCharge,
-                    status,
-                    recipientName,
-                    recipientaddress: address,
-                    recipientPostalCode: postalcode,
-                    recipientCity: city,
-                    recipientProvince: province,
-                    recipientNation,
-                    goodDestinationAddress,
-                    goodDestinationPostalCode,
-                    goodsDestinationCity,
-                    goodDestinationProvince,
-                    goodDestinationNation,
-                    career1,
-                    career2,
-                    career3,
-                    causal,
-                    externalAppariance,
-                    port,
-                    noPackeges,
-                    annotations,
-                    products: theseAreTheLastProducts
-                }
-            )
-            // const interedData2 = new Products({
-            //     productDescription,
-            //     netPrice,
-            //     pricePerKg,
-            //     grossPrice,
-            //     textPrice,
-            // })
-            interedData.user_ref = user_ref
-            const saved = await interedData.save();
-            // const saved2 = await interedData2.save();
-            res.status(200).json({ message: "data submitted successfully" })
+            // const data2 = await Transport.find();
+            // const lastIndex = data2.length - 1;
+            // const doc = data2[lastIndex];
+            // const docNo = doc.docNo + 1;
+            const data2 = await Transport.find().count();
+            if (data2 == 0) {
+                console.log("first");
 
+                const interedData = new Transport(
+                    {
+                        user_ref,
+                        docNo: 1,
+                        docDate: reversedDate,
+                        transportStartTime,
+                        goodsTravilingByMeans,
+                        sanderAddress,
+                        agentInCharge,
+                        status,
+                        recipientName,
+                        recipientaddress: address,
+                        recipientPostalCode: postalcode,
+                        recipientCity: city,
+                        recipientProvince: province,
+                        recipientNation,
+                        goodDestinationAddress,
+                        goodDestinationPostalCode,
+                        goodsDestinationCity,
+                        goodDestinationProvince,
+                        goodDestinationNation,
+                        career1,
+                        career2,
+                        career3,
+                        causal,
+                        externalAppariance,
+                        port,
+                        noPackeges,
+                        annotations,
+                        products: theseAreTheLastProducts
+                    }
+                )
+                interedData.user_ref = user_ref
+                const saved = await interedData.save();
+                res.status(200).json({ message: "data submitted successfully" })
+            } else {
+                const data2 = await Transport.find();
+                const lastIndex = data2.length - 1;
+                const doc = data2[lastIndex];
+                const docNo = doc.docNo + 1;
+                console.log("not first");
+                const interedData = new Transport(
+                    {
+                        user_ref,
+                        docNo,
+                        docDate: reversedDate,
+                        transportStartTime,
+                        goodsTravilingByMeans,
+                        sanderAddress,
+                        agentInCharge,
+                        status,
+                        recipientName,
+                        recipientaddress: address,
+                        recipientPostalCode: postalcode,
+                        recipientCity: city,
+                        recipientProvince: province,
+                        recipientNation,
+                        goodDestinationAddress,
+                        goodDestinationPostalCode,
+                        goodsDestinationCity,
+                        goodDestinationProvince,
+                        goodDestinationNation,
+                        career1,
+                        career2,
+                        career3,
+                        causal,
+                        externalAppariance,
+                        port,
+                        noPackeges,
+                        annotations,
+                        products: theseAreTheLastProducts
+                    }
+                )
+                interedData.user_ref = user_ref
+                const saved = await interedData.save();
+                res.status(200).json({ message: "data submitted successfully" })
+            }
         }
     } else {
         res.status(403).json({ error: "atleast one product is required" })
     }
 })
+
 router.get('/get-recipitents-data', async (req, res) => {
     const id = req.headers.id;
     const data = await AddressBook.find({ user_ref: id });
-    res.status(200).json({ data: data })
+    const data2 = await Transport.find().count();
+    if (data2 == 0) {
+        console.log("first");
+        res.status(200).json({ data: data, docNo: 1 })
+    } else {
+        const data2 = await Transport.find();
+        const lastIndex = data2.length - 1;
+        const doc = data2[lastIndex];
+        const docNo = doc.docNo + 1;
+        console.log(docNo);
+        console.log("not first");
+        res.status(200).json({ data: data, docNo })
+    }
 })
 
 
 router.get('/display-transports', async (req, res) => {
     const ID = req.headers.id
-
     const data = await Transport.find({ user_ref: ID });
     let filteredDates = data.map(function (val) {
         return val.docDate.slice(-4);
@@ -138,7 +188,6 @@ router.get('/display-transports', async (req, res) => {
     let dates = filteredDates.filter(function (item, index) {
         return filteredDates.indexOf(item) === index;
     });
-
     res.status(200).json({ data: data, dates });
 })
 router.get('/delete-transports', async (req, res) => {
@@ -146,7 +195,6 @@ router.get('/delete-transports', async (req, res) => {
     const userID = req.headers.userid
     const data = await Transport.deleteOne({ _id: ID });
     if (data.acknowledged == true) {
-
         const data2 = await Transport.find({ user_ref: userID });
         res.status(200).json({ data: data2 })
     } else {
@@ -155,7 +203,6 @@ router.get('/delete-transports', async (req, res) => {
 })
 router.get('/display-transport-view', async (req, res) => {
     const ID = req.headers.id
-
     const data = await Transport.findOne({ _id: ID });
     res.status(200).json({ data: data });
 })
@@ -165,15 +212,11 @@ router.get('/get-products-data', async (req, res) => {
 })
 router.get('/document-data', async (req, res) => {
     const ID = req.headers.documentid
-
     const data = await Transport.findOne({ _id: ID });
-
     res.status(200).json({ data: data });
 })
 
 router.post('/update-document', async (req, res) => {
-    console.log(req.body);
-
     const { documentid } = req.headers
     const data = req.body.documentData;
     const updated = await Transport.updateOne({ _id: documentid }, { $set: data })

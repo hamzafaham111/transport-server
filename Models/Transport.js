@@ -5,7 +5,7 @@ const TransportSchema = mongoose.Schema({
         required: true,
     },
     docNo: {
-        type: String,
+        type: Number,
         required: true,
     },
     docDate: {
