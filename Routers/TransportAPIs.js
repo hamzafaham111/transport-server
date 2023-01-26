@@ -8,7 +8,6 @@ const Products = require('../Models/ProductsSchema')
 router.post('/add-document', async (req, res) => {
     console.log(req.body);
     const {
-
         docDate,
         transportStartTime,
         goodsTravilingByMeans,
@@ -68,14 +67,9 @@ router.post('/add-document', async (req, res) => {
             const date = docDate;
             const parts = date.split("-");
             const reversedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
-            console.log(reversedDate);
-            // const data2 = await Transport.find();
-            // const lastIndex = data2.length - 1;
-            // const doc = data2[lastIndex];
-            // const docNo = doc.docNo + 1;
+
             const data2 = await Transport.find().count();
             if (data2 == 0) {
-                console.log("first");
 
                 const interedData = new Transport(
                     {
@@ -165,15 +159,13 @@ router.get('/get-recipitents-data', async (req, res) => {
     const data = await AddressBook.find({ user_ref: id });
     const data2 = await Transport.find().count();
     if (data2 == 0) {
-        console.log("first");
+
         res.status(200).json({ data: data, docNo: 1 })
     } else {
         const data2 = await Transport.find();
         const lastIndex = data2.length - 1;
         const doc = data2[lastIndex];
         const docNo = doc.docNo + 1;
-        console.log(docNo);
-        console.log("not first");
         res.status(200).json({ data: data, docNo })
     }
 })
@@ -218,8 +210,24 @@ router.get('/document-data', async (req, res) => {
 
 router.post('/update-document', async (req, res) => {
     const { documentid } = req.headers
-    const data = req.body.documentData;
-    const updated = await Transport.updateOne({ _id: documentid }, { $set: data })
-    res.status(200).json({ message: "documento aggiornato" })
+    const { documentData, finalProducts, lastProducts } = req.body;
+    if (lastProducts.productDescription == "") {
+        const products = [
+            ...finalProducts,
+        ]
+        console.log(req.body, "updated data is up");
+        const data = req.body;
+        console.log(data, "this si the pudated data");
+        const updated = await Transport.updateOne({ _id: documentid }, { $set: { documentData, products } })
+        res.status(200).json({ message: "documento aggiornato" })
+    } else {
+        const products = [
+            ...finalProducts,
+            lastProducts
+        ]
+        const updated = await Transport.updateOne({ _id: documentid }, { $set: { documentData, products } })
+        res.status(200).json({ message: "documento aggiornato" })
+    }
+
 })
 module.exports = router
