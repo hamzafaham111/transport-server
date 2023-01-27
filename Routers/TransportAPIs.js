@@ -62,7 +62,7 @@ router.post('/add-document', async (req, res) => {
             !port ||
             !noPackeges) {
             console.log("should fill the complete form");
-            res.status(403).json({ error: "Please Fill Your Form Completely" })
+            res.status(403).json({ error: "Si prega di compilare il modulo completamente" })
         } else {
             const date = docDate;
             const parts = date.split("-");
@@ -105,7 +105,7 @@ router.post('/add-document', async (req, res) => {
                 )
                 interedData.user_ref = user_ref
                 const saved = await interedData.save();
-                res.status(200).json({ message: "data submitted successfully" })
+                res.status(200).json({ message: "Dati inviati con successo" })
             } else {
                 const data2 = await Transport.find();
                 const lastIndex = data2.length - 1;
@@ -215,18 +215,23 @@ router.post('/update-document', async (req, res) => {
         const products = [
             ...finalProducts,
         ]
-        console.log(req.body, "updated data is up");
-        const data = req.body;
-        console.log(data, "this si the pudated data");
-        const updated = await Transport.updateOne({ _id: documentid }, { $set: { documentData, products } })
-        res.status(200).json({ message: "documento aggiornato" })
+        const updated = await Transport.updateOne({ _id: documentid }, { $set: { ...documentData, products: products } })
+        if (updated.acknowledged == true) {
+            res.status(200).json({ message: "documento aggiornato" })
+        } else {
+            res.status(403).json({ error: "Aggiornamento non riuscito" })
+        }
     } else {
         const products = [
             ...finalProducts,
             lastProducts
         ]
-        const updated = await Transport.updateOne({ _id: documentid }, { $set: { documentData, products } })
-        res.status(200).json({ message: "documento aggiornato" })
+        const updated = await Transport.updateOne({ _id: documentid }, { $set: { ...documentData, products: products } })
+        if (updated.acknowledged == true) {
+            res.status(200).json({ message: "documento aggiornato" })
+        } else {
+            res.status(403).json({ error: "Aggiornamento non riuscito" })
+        }
     }
 
 })
